@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Patient Page</title>
+</head>
+<body>
+    
+    <!--//in class container i want header to give me name of patient
+    //two class=box one a table to show all Appointments and the other box to add Appointment-->
+
+    <div class="container">
+        <div class="box box-header">
+            <h1>Hi, Patient Name</h1>
+        </div>
+        
+        <div class="boxes dp_edit">
+            
+            <div class="box Appointment">
+                <div class="title">
+                    <h2>Remove Appointment</h2>
+                </div>
+                
+                <div class="table">
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Center</th>
+                            <th>Doctor</th>
+                            <th>Doctor Amka</th>
+
+                        </tr>
+                        <!-- <tr>
+                            <td>12/12/2021</td>
+                            <td>12:00</td>
+                            <td>Center 1</td>
+                            <td>Doctor 1</td>
+                            <td>123456789</td>
+                        </tr> -->
+                    </table>
+                    <div class="btnRemoveTimeslot">
+                        Remove Appointment
+                  </div>
+                </div>
+            </div>
+            <div class="box Appointment">
+                <div class="title">
+                    <h2>Vaccination status</h2>
+                </div class="verification_patient">
+                    <!-- one card with patient details about verification date, exparation date, name, surname, amka -->
+                    <div class="card">
+                        
+                </div>
+                
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+</html>
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+      
+      
+    //url.search slit to get values
+    var name = url.search.split("&")[0].split("=")[1];
+    var surname = url.search.split("&")[1].split("=")[1];
+    var pamka = url.search.split("&")[2].split("=")[1];
+
+    jQuery('.box-header h1').html('Hi, ' + name + ' ' + surname);
+
+       //Personal Appointment function
+       function personalAppoiment(json){
+        element= JSON.parse(json);
+        //console.log(json);
+ 
+       if(element.amka == pamka && element.patient.name == name && element.patient.surname == surname){
+        row = '<tr><td>'+element.timeslot.date+'</td><td>'+element.timeslot.start+'</td><td>'+element.timeslot.vaccinationCenter.vcname+'</td><td>'+element.timeslot.doctor.doctorname+'</td><td>'+element.timeslot.doctor.damka+'</td></tr>';
+            jQuery('table').append(row);
+        
+        
+    }
+        
+     }
+
+     var flag =0;
+
+     function findAppointmentByPatient(){
+        //POST request to find appointment by patient
+        var settings = {
+            "url": "http://localhost:8080/findAppointmentByPatient",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": "application/json",
+            "data": JSON.stringify({"amka":pamka})
+                                     
+          };
+          
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+            console.log(flag);
+            if(flag===0)
+                personalAppoiment(response);
+            else
+                removeAppoiment(response);
+        
+            
+            
+          });
+       
+     }
+     //getAppointment();
+
+    
+
+    findAppointmentByPatient();
+
+    jQuery('.btnRemoveTimeslot').click(function(){
+
+        flag=1;
+        findAppointmentByPatient();
+    });
+   
+    function removeAppoiment(json){
+        console.log("here");
+        json= JSON.parse(json);
+        console.log(json);
+            var settings = {
+                "url": "http://localhost:8080/removeAppointment",
+                "method": "DELETE",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": "application/json",
+                "data": JSON.stringify(json)
+                                         
+              };
+              
+              $.ajax(settings).done(function (response) {
+               
+                alert("Appointment Removed");
+                location.reload();
+                
+              });
+    }
+    
+
+
+    ///Find your findVaccinationByPatient
+    function findVaccinationByPatient(){
+        //POST request to find appointment by patient
+        var settings = {
+            "url": "http://localhost:8080/findVaccinationByPatient",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": "application/json",
+            "data": JSON.stringify({"amka":pamka})
+                                     
+          };
+          
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+            personalVaccination(response);
+            
+          });
+       
+     }
+    
+    findVaccinationByPatient();
+
+    function personalVaccination(json){
+        element= JSON.parse(json);
+        console.log(json);
+ 
+        if(element.patient.amka === pamka && element.patient.name === name && element.patient.surname === surname){
+            row ='<div class="card-header">'+
+                            '<h3>Verification Details</h3>'+
+                        '</div>'+
+                        '<div class="card-body">'+
+                            '<div class="card-body-item">'+
+                                '<h4>Verification Date</h4>'+
+                                '<p>12/12/2021</p>'+
+                            '</div>'+
+                            '<div class="card-body-item">'+
+                                '<h4>Expiration Date</h4>'+
+                                '<p>'+element.date+'</p>'+
+                            '</div>'+
+                            '<div class="card-body-item">'+
+                                '<h4>Name</h4>'+
+                                '<p>'+element.patient.name+'</p>'+
+                            '</div>'+
+                            '<div class="card-body-item">'+
+                                '<h4>Surname</h4>'+
+                                '<p>'+element.patient.surname+'</p>'+
+                            '</div>'+
+                            '<div class="card-body-item">'+
+                                '<h4>Amka</h4>'+
+                                '<p>'+element.patient.amka+'</p>'+
+                            '</div>'+
+                            '<div class="card-body-item">'+
+                                '<h4>QR Code</h4>'+
+                                '<img src="qr.png" alt="qr">'+
+                        '</div>'
+            jQuery('.card').append(row);
+        }
+        
+    }
+        
+     
+        
+
+</script>

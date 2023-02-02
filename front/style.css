@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+body{
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f5f5;
+      color:#183153;
+}
+
+.form{
+      display: block;
+}
+.non-editable{
+      pointer-events: none;
+}
+
+table,.tableTbt{
+      border-spacing: 10px;
+}
+.container{
+      width: 100vw;
+      min-height:100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #f5f5f5;
+}
+
+.boxes{
+      width: 1200px;
+      min-height: 600px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: flex-start;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+
+}
+
+.box{
+      width: 600px;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+      cursor: pointer;
+      margin:22px ;
+}
+.box.bmain{
+      justify-content: center !important;
+}
+.box:hover{
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
+}
+
+.box .icon{
+      width: 100px;
+      height: 100px;
+      
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+}
+
+i{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      width: 100px;
+      font-size: 122px;
+      color: #183153;
+     
+      font-weight: 900;
+     
+}
+
+.box.appointent{
+      width: 90vw;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+      cursor: pointer;
+      margin:22px ;
+}
+/* Path: Login-Page */
+
+
+.content{
+      width: 500px;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+      cursor: pointer;
+}
+
+.sign_up{display: none;}
+
+ .user-details{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 10px;
+      
+}
+
+ .user-details .input-box{
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+}
+.log{
+      width:75% !important;
+}
+ .user-details .title{
+      font-size: 30px;
+      font-weight: 500;
+      color: #183153;
+      margin-bottom: 20px;
+}
+
+.user-details .input-box .details{
+      font-size: 18px;
+      min-width: 35%;
+}
+
+ .user-details .input-box input ,select{
+      
+      height: 80%;
+      min-width: 80%;
+      margin-left:11px ;
+      border: none;
+      border-bottom: 1px solid #183153;
+      outline: none;
+      font-size: 18px;
+      color: #183153;
+      font-weight: 500;
+      background-color: #f5f5f5;
+}
+.in_login{
+      min-width: 50% !important;
+}
+ .user-details .input-box input:focus{
+      border-bottom: 1px solid #183153;
+}
+
+ .user-details .input-box input::placeholder{
+      color: #183153;
+      font-weight: 500;
+}
+.form{
+      width: 50%;
+}
+.btnAddAppointment,.content .user-details .btnLogin, .content .user-details .btnSignUp, .user-details .btnAddTimeslot,.table .btnAddAppoiment{
+      width: 33%;
+      height: 50px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #183153;
+      border-radius: 10px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.5s;
+}
+.patientDetails{
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      width: 90%;
+      margin-top: 22px;
+      
+      
+}
+ .btnByDate, .btnByMount{
+      width: 50%;
+      height: 50px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #183153;
+      border-radius: 10px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.5s;
+}
+
+.btnAddAppointment, .btnAddTimeslot, .btnAddAppoiment{
+      width: 90% !important;
+}
+
+.content .user-details .btnLogin:hover, .content .user-details .btnSignUp:hover{
+      background-color: #183153;
+      box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
+}
+
+
+/* PATIENT PAGE*/
+.box-header{
+      width: 90vw;
+      height: 50px;
+      min-height: 50px;
+      margin-top: 0;
+      justify-content: center;
+}
+.dp_edit{
+      width: 90vw;
+}
+th{
+      text-align: start;
+}
+tr:hover{
+      background-color: #f5f5f5;
+}
+.selected{
+      background-color: #f5f5f5;
+}
+
+
+/* //////////// */
+
+.card{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+}
+
+.card .card-body{
+      width: 70%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 20px;
+}
+
+.card .card-body .card-body-item{
+      min-height:77px;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 0;
+      
+}
+
+.card .card-body .card-body-item h4, .card .card-body .card-body-item p{
+      margin: 0;
+      padding: 0;
+      line-height:33px
+}
+
+.card .card-body .card-body-item img{
+      max-width: 66px;
+      max-height: 66px;
+}
+

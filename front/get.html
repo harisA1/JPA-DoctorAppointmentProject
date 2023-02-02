@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- link jQuery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <title>Document</title>
+
+</head>
+<body>
+      <!-- make a form with date and time and print the result in a table  -->
+      
+      <table>
+            date: <input type="date" id="date" class="date_test">
+            start: <input type="time" id="start" class="time_test">
+            button: <button id="add_test">Add</button>
+      </table>
+           
+      </form>
+      <div class="resault">
+            <table>
+                  <tr>
+                        <th>date</th>
+                        <th>start</th>
+                  </tr>
+            </table>
+      </div>
+
+      <script>
+
+            //add date and time to table
+            $("#add_test").click(function(){
+                  let date = $("#date").val();
+                  let start = $("#start").val();
+                  console.log(date);
+                  //who to format date dd:mm:yyyy
+                  date = date.split("-").reverse().join(":");
+                  console.log(date);
+                  console.log(start);
+                  addTest(date,start);
+            });
+
+            //add date and time to table
+            function addTest(date,start) {
+                  $(".resault").append("<tr><td>"+date+"</td><td>"+start+"</td></tr>");
+            }
+
+
+      </script>
+
+</body>
+</html>

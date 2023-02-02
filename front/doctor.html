@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Doctor Page</title>
+</head>
+<body>
+    
+    <!--//in class container i want header to give me name of patient
+    //two class=box one a table to show all appointents and the other box to add appointent-->
+
+    <div class="container">
+        <div class="box box-header">
+            <h1>Hi, Doctor Name</h1>
+        </div>
+        
+        <div class="boxes dp_edit">
+            
+            <div class="box ">
+                <div class="title">
+                    <h2>Timeslots</h2>
+                </div>
+                <div class="table">
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Amka</th>
+                            <th>Center</th>
+                        </tr>
+                         <!--
+                            <tr>
+                                <td>1</td>
+                                <td>2021-05-05</td>
+                                <td>10:00</td>
+                                <td>123456789</td>
+                                <td>Center 1</td>
+                            </tr>  
+                        -->
+                        
+                    </table>
+                </div>
+            </div>
+            <div class="box">
+                <div class="title">
+                    <h2>Add Timeslot</h2>
+                </div>
+                <div class="form">
+                    
+                    <div class="user-details">
+                        <div class="input-box">
+                              <span class="details">Date</span>
+                              <input type="date" id="dateS" placeholder="Enter your date" required>
+                          </div>
+                          <div class="input-box">
+                              <span class="details">Start</span>
+                              
+                              <select name="time" id="timeS">
+                                    <!-- every 20 min -->
+                                    <option value=""></option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="10:20">10:20</option>
+                                    <option value="10:40">10:40</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="11:20">11:20</option>
+                                    <option value="11:40">11:40</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:20">12:20</option>
+                                    <option value="12:40">12:40</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:20">13:20</option>
+                                    <option value="13:40">13:40</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="14:20">14:20</option>
+                                    <option value="14:40">14:40</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="15:20">15:20</option>
+                                    <option value="15:40">15:40</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="16:20">16:20</option>
+                                    <option value="16:40">16:40</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:20">17:20</option>
+                                    <option value="17:40">17:40</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:20">18:20</option>
+                                    <option value="18:40">18:40</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:20">19:20</option>
+                                    <option value="19:40">19:40</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:20">20:20</option>
+                                    <option value="20:40">20:40</option>
+                              </select>
+                              
+                          </div>
+                          
+                        <!-- <div class="input-box">
+                            <span class="details">AMKA</span>
+                            <input type="text" id="amkaS" placeholder="Enter your AMKA" required>
+                        </div> -->
+                        <!-- one select to choose doctor -->
+                        <div class="input-box">
+                            <span class="details">Center</span>
+                            <select name="doctor" id="CenterS">
+                                
+                            </select>
+                        </div>
+                        
+                        <div class="btnAddTimeslot">
+                              Add New Timeslot
+                        </div>
+
+                        
+                        
+                    </div>
+                    
+
+                </div>
+                <div class="patientDetails">More Details Here </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+
+      //get values from url 
+      var url_string = window.location.href;
+      var url = new URL(url_string);
+      //console.log(url);
+      
+      //url.search slit to get values
+      var name = url.search.split("&")[0].split("=")[1];
+      var amka = url.search.split("&")[1].split("=")[1];
+
+      //jQuery('h1').parent().innerHTML(name);
+      jQuery('.box-header h1').html('Hi, ' + name);
+
+      //console.log(amka);
+      function timeslot(){
+        var settings = {
+                  "url": "http://localhost:8080/getTimeslots",
+                  "method": "GET",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false
+                  };
+                  $.ajax(settings).done(function (response) {
+                  //console.log(response);
+                        
+                        showTimeslots(response);
+                  
+                  });
+      }
+      timeslot();
+      
+      function showTimeslots(response){
+
+            response = JSON.parse(response);
+            console.log(response);
+            //console.log(amka);
+            response.forEach(function(element){
+                 //compare the amka value with element.doctor.amka
+                  //console.log(element.doctor.damka === amka);
+                  if(element.doctor.damka === amka){
+                        //appent to table
+                        //console.log(element);
+                       
+
+                        //with appent
+                        row = "<tr><td>"+element.timeslotID+"</td><td>"+element.date+"</td><td>"+element.start + "-" + element.end+"</td><td>"+element.doctor.damka+"</td><td>"+element.vaccinationCenter.vcname+"</td></tr>";
+                        $("table").append(row);
+                  }
+            
+                 
+            });
+
+      }
+
+      //getVaccinationCenters
+      var settings = {
+                  "url": "http://localhost:8080/getVaccinationCenters",
+                  "method": "GET",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false
+                  };
+                  $.ajax(settings).done(function (response) {
+                  //console.log(response);
+                        
+                        showVaccinationCenters(response);
+                  
+                  });
+
+      function showVaccinationCenters(response){
+            response = JSON.parse(response);
+            //console.log(response);
+            response.forEach(function(element){
+                  //appent to table
+                  //console.log(element);
+                  //with appent
+                  row = "<option value="+element.vcname+">"+element.vcname+"</option>";
+                  $("#CenterS").append(row);
+            });
+
+      }
+      
+
+      ////////////////////////Date Validation/////////////////////////
+      jQuery("#dateS").change(function(){
+      var selectedDate = new Date(jQuery(this).val());
+      var currentDate = new Date();
+      if (selectedDate < currentDate) {
+            alert("You can't choose past date, please select today or a future date.");
+            jQuery(this).val('');
+      }
+  });
+      ///////////////////////////Time Validation/////////////////////////
+      jQuery("#timeS").change(function(){
+           var val = jQuery(this).val();
+            console.log(val);
+      });
+      
+      ///////////////////////////Add Timeslot/////////////////////////
+
+      //addTimeslot
+      $(".btnAddTimeslot").click(function(){
+            
+            //if date and time are empty empty alert
+            if($("#dateS").val() === "" || $("#timeS").val() === ""){
+                  alert("Please fill all fields");
+                  return;
+            }else{
+                 
+    
+                  var date = $("#dateS").val();
+                  //date with / instead of -
+                    date = date.split("-").join("/");
+                  var time = $("#timeS").val();
+                  //split time to get start and end
+                  var start = time.split("-")[0];
+                  var end = time.split("-")[1];
+                  //console.log(start+" "+end);
+                  var center = $("#CenterS").val();
+                  
+
+                  
+                    var settings = {
+                        "url": "http://localhost:8080/addAvailableTimeslot",
+                        "method": "POST",
+                        "timeout": 0,
+                        "headers": {
+                        "mimeType": "multipart/form-data",
+                        "contentType": "false",
+                        "Content-Type": "application/json"
+                        },
+                        "data": JSON.stringify({
+                            "timeslot": {
+                                "date": date,
+                                "start": start,
+                            },
+                            "vaccinationcenter": {
+                                "vcname": center
+                            },
+                            "doctor": {
+                                "damka": amka,
+                                "doctorname": name
+                            }
+                        }),
+                    };
+
+                        
+                    $.ajax(settings).done(function (response) {
+                        //console.log(response);
+                                alert("Timeslot added");
+                               
+                                location.reload();
+                        
+                    });
+            }
+            
+            
+            
+            
+
+      });
+      jQuery('.patientDetails').click(function(){
+   
+        window.location.href = "doctor_vaccination.html?name="+name+"&amka="+amka;
+        });
+
+</script>

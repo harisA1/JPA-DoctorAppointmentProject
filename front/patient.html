@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/2c36e9b7b1.js" crossorigin="anonymous"></script>
+    <title>Patient Page</title>
+</head>
+<body>
+    
+    <!--//in class container i want header to give me name of patient
+    //two class=box one a table to show all Appointments and the other box to add Appointment-->
+
+    <div class="container">
+        <div class="box box-header">
+            <h1>Hi, Patient Name</h1>
+        </div>
+        <div class="box box-header" id="header2">
+            
+        </div>
+        <div class="boxes dp_edit">
+            
+            <div class="box Appointment">
+                <div class="title">
+                    <h2>Available Timeslots</h2>
+                </div>
+                
+                <div class="table">
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Center</th>
+                            <th>Doctor</th>
+                            <th>Doctor Amka</th>
+
+                        </tr>
+                        
+                    </table>
+                    <table id="tableTbt">
+                        
+                        
+                    </table>
+                    <div class="btnAddAppointment">
+                        Add New Appointment
+                  </div>
+                </div>
+            </div>
+            <div class="box Appointment">
+                <div class="title">
+                    <h2>Select Date or Month</h2>
+                </div>
+                <div class="form">
+                    
+                    <div class="user-details">
+                        <h3>By Date</h3>
+                        <div class="input-box">
+                              <span class="details">Date</span>
+                              <input type="date" id="dateSS" placeholder="Enter your date" required>
+                        </div>                              
+                    </div>
+                        <div class="btnByDate">
+                              Show
+                        </div>
+                </div>
+
+                <!-- By Mount -->
+                <div class="form">
+                    
+                    <div class="user-details">
+                        <h3>By Month</h3>
+                        <div class="input-box">
+                              <span class="details">Month</span>
+                              <select name="monthS" id="">
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                              </select>
+                        </div>                              
+                    </div>
+                        <div class="btnByMount">
+                              Show
+                        </div>
+                </div>
+                <div class="patientDetails">More Details Here </div>
+                
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+</html>
+<script>
+
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+      
+      
+    //url.search slit to get values
+    var name = url.search.split("&")[0].split("=")[1];
+    var surname = url.search.split("&")[1].split("=")[1];
+    var pamka = url.search.split("&")[2].split("=")[1];
+
+    jQuery('.box-header h1').html('Hi, ' + name + ' ' + surname);
+
+    jQuery("#dateSS").change(function(){
+      var selectedDate = new Date(jQuery(this).val());
+      var currentDate = new Date();
+      if (selectedDate < currentDate) {
+            alert("You can't choose past date, please select today or a future date.");
+            jQuery(this).val('');
+      }
+    });
+
+    //Personal Appointment function
+    function personalAppointment(json){
+        json= JSON.parse(json);
+        //console.log(json);
+ 
+       if(json.amka == pamka && json.patient.name == name && json.patient.surname == surname){
+        
+        
+        jQuery(".btnAddAppointment").hide();
+    }
+        
+     }
+
+     function findAppointmentByPatient(){
+        //POST request to find appointment by patient
+        var settings = {
+            "url": "http://localhost:8080/findAppointmentByPatient",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": "application/json",
+            "data": JSON.stringify({"amka":pamka})
+                                     
+          };
+          
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+            personalAppointment(response);
+
+          });
+       
+     }
+
+    
+
+    findAppointmentByPatient();
+
+
+    //Get Timeslots by date
+    function getTimeslotsByDate(date){
+        
+        console.log(date);
+
+        var settings = {
+                  "url": "http://localhost:8080/getTimeslotsByDate?date="+date,
+                  "method": "GET",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false
+                  };
+                  //var response = await $.ajax(settings);
+                  $.ajax(settings).done(function (response) {
+                  //console.log(response);
+                        showTimeslots(response);
+                        
+
+
+                  });
+
+      }
+
+        //BTN BY DATE
+        jQuery('.btnByDate').click(function(){
+            var date = jQuery('#dateSS').val();
+            //date with / instead of -
+            date = date.split("-").join("/");
+            // dd/mm/yyyy
+            date = date.split("/").reverse().join("/");
+            getTimeslotsByDate(date);
+        });
+
+        //BTN BY MONTH
+        jQuery('.btnByMount').click(function(){
+            var month = jQuery('select[name="monthS"]').val();
+            getTimeslotsByMonth(month);
+        });
+
+      //Get Timeslots by month
+      function getTimeslotsByMonth(month){
+        
+        var settings = {
+                  "url": "http://localhost:8080/getByMonth?month=/"+month+"/",
+                  "method": "GET",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false
+                  };
+                  //var response = await $.ajax(settings);
+                  $.ajax(settings).done(function (response) {
+                  //console.log(response);
+                        showTimeslots(response);
+                        
+
+
+                  });
+
+      }
+    
+    //getTimeslots();
+
+    function showTimeslots(response){
+        jQuery('#tableTbt').empty();
+        response= JSON.parse(response);
+       // console.log(response);
+        
+        response.forEach(element => {
+            //console.log(element);
+            row = '<tr><td>'+element.date+'</td><td>'+element.start+'</td><td>'+element.vaccinationCenter.vcname+'</td><td>'+element.doctor.doctorname+'</td><td>'+element.doctor.damka+'</td></tr>';  
+            jQuery('#tableTbt').append(row);
+        });
+        
+    }
+
+   
+      //getTimeslots2();
+
+
+    let selectedDate = '';
+    let selectedTime = '';
+    let selectedCenter = '';
+    let selectedDoctor = '';
+    let selectedDamka  = '' ;
+
+    jQuery('#tableTbt').on('click', 'tr', function(){
+
+        //remove selected class from all tr
+        jQuery('tr').removeClass('selected');
+        //add selected class to clicked tr
+        jQuery(this).addClass('selected');
+
+        selectedDate = jQuery(this).find('td:nth-child(1)').text();
+        selectedTime = jQuery(this).find('td:nth-child(2)').text();
+        selectedCenter = jQuery(this).find('td:nth-child(3)').text();
+        selectedDoctor = jQuery(this).find('td:nth-child(4)').text();
+        selectedDamka = jQuery(this).find('td:nth-child(5)').text();
+
+        console.log(selectedDate + ' ' + selectedTime + ' ' + selectedCenter + ' ' + selectedDoctor + ' ' + selectedDamka);
+    });
+
+    jQuery('.btnAddAppointment').on('click', function(){
+        console.log("clicked");
+        if(selectedDate =='' && selectedTime =='' && selectedCenter =='' 
+        && selectedDoctor =='' && selectedDamka =='')
+        {
+            alert('Please select an Appointment');
+            
+        }else{
+            //addAppointment(selectedDate, selectedTime, selectedCenter, selectedDoctor, selectedDamka);
+            getTimeslots(selectedDate, selectedTime, selectedCenter, selectedDoctor, selectedDamka);
+        }
+        
+    });
+
+    
+
+    function getTimeslots(selectedDate, selectedTime, selectedCenter, selectedDoctor, selectedDamka){
+        
+        var settings = {
+                  "url": "http://localhost:8080/getTimeslots",
+                  "method": "GET",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false
+                  };
+                  //var response = await $.ajax(settings);
+                  $.ajax(settings).done(function (response) {
+                  
+                        addAppointmentToDB(response,selectedDate, selectedTime, selectedCenter, selectedDoctor, selectedDamka);
+                    
+                  });
+
+    }
+
+                    function addAppointmentToDB(json, date, time, center, doctor, damka){
+                json = JSON.parse(json);
+                //console.log(date + " " + time + " " + center + " " + doctor + " " + damka);
+                //console.log(json);
+                var foundTimeslot;
+                json.forEach(element => {
+                    if (element.date == date 
+                        && element.start == time 
+                        && element.vaccinationCenter.vcname == center 
+                        && element.doctor.doctorname == doctor 
+                        && element.doctor.damka == damka) {
+                    foundTimeslot = element;
+                    console.log(element);
+                    return false;
+
+                    }
+                });
+                if (!foundTimeslot) {
+                    console.error('Timeslot not found');
+                    return;
+                }
+                var settings = {
+                    "url": "http://localhost:8080/addAppointment",
+                    "method": "POST",
+                    "timeout": 0,
+                    "processData": false,
+                    "mimeType": "multipart/form-data",
+                    "contentType": "application/json",
+                    "data": JSON.stringify({
+                    "patient": {
+                        "amka": pamka,
+                        "name": name,
+                        "surname": surname
+                    },
+                    "timeslot": foundTimeslot
+                    })
+                };
+                $.ajax(settings).done(function (response) {
+                    console.log(response);
+                    alert("Appointment added successfully");
+                    location.reload();
+                });
+}
+
+//location patient_details.html with name and surname and amka in url
+jQuery('.patientDetails').click(function(){
+   
+    window.location.href = "pateint_details.html?name="+name+"&surname="+surname+"&amka="+pamka;
+});
+    
+    
+function findVaccinationByPatient(){
+        //POST request to find appointment by patient
+        var settings = {
+            "url": "http://localhost:8080/findVaccinationByPatient",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": "application/json",
+            "data": JSON.stringify({"amka":pamka})
+                                     
+          };
+          
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+            
+            header_state(response);
+          });
+       
+          
+          
+
+     }
+     findVaccinationByPatient();
+                jQuery('#header2').text("Not Vaccinated");
+                jQuery('#header2').css("background","red");
+                jQuery('#header2').css("color","white");
+
+     function header_state(json){
+            element= JSON.parse(json);
+            if(element.patient.amka === pamka && element.patient.name === name && element.patient.surname === surname){
+                jQuery('#header2').text("Vaccinated");
+                jQuery('#header2').css("background","green");
+                jQuery('#header2').css("color","white");
+                console.log("Vaccinated");
+           
+        }
+    }
+
+</script>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Vaccination Center</title>
+      <link rel="stylesheet" href="style.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <!-- font awesome  css-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+      
+</head>
+<body>
+     <div class="container">
+
+      <div class="boxes">
+            <div class="box bmain">
+                  <div class="icon" id="user_connect">
+                  <!-- icon user -->
+                  <i class="fas fa-user"></i>
+                  </div>
+                  <div class="title">
+                        <h2>Contect as Patient</h2>
+                  </div>
+
+            </div>
+            <div class="box bmain"  id="doctor_connect">
+                  <div class="icon">
+                  <!-- icon doctor -->
+                  <i class="fas fa-user-md"></i>
+                  </div>
+                  <div class="title">
+                        <h2>Contect as Doctor</h2>
+                  </div>
+            </div>
+      </div>
+
+
+     </div>
+
+     <script>
+            $(document).ready(function(){
+                  $("#user_connect").click(function(){
+                        window.location.href = "loginP.html";
+                  });
+                  $("#doctor_connect").click(function(){
+                        window.location.href = "loginD.html";
+                  });
+            });
+
+     </script>
+
+</body>
+</html>

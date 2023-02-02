@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <title>Document</title>
+</head>
+<body>
+      <div class="add_d">
+            <!-- name surname amka -->
+                  <label for="name">Name</label>
+                  <input type="text" name="name" id="name">
+
+                  <label for="surname">Surname</label>
+                  <input type="text" name="surname" id="surname">
+
+                  <label for="amka">AMKA</label>
+                  <input type="text" name="amka" id="amka">
+                  <button class="add">add Doctor </button>
+            </div>
+
+
+</body>
+
+      <script>
+           
+                  $(".add").click(function(){
+                        var name = $("#name").val();
+                        var surname = $("#surname").val();
+                        var amka = $("#amka").val();
+                        addDoctor(name, surname, amka);
+            
+                  });
+            
+            function addDoctor(n, s, a) {		
+                  var settings = {
+                  "url": "http://localhost:8080/addDoctor",
+                  "method": "POST",
+                  "timeout": 0,
+                  "headers": {
+                        "Content-Type": "application/json"
+                  },
+                  "data": JSON.stringify({
+                        "name": n,
+                        "surname": s,
+                        "amka": a
+                  }),
+                  };
+
+                  $.ajax(settings).done(function (response) {
+                        alert('added doctor');
+                  });
+            }
+
+
+      </script>
+
+
+</html>

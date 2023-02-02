@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jquery-->
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>login Doctor</title>
+</head>
+<body>
+
+    <div class="container">
+       
+        <div class="content login">
+            
+            <div class="user-details">
+                <div class="title">Doctor Login</div>
+                <div class="input-box log">
+                    <span class="details">Name</span>
+                    <input class="in_login" type="text" id="nameL" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="input-box log">
+                    <span class="details">AMKA</span>
+                    <input class="in_login" type="text" id="amkaL" placeholder="Enter your AMKA" required>
+                </div>
+                <div class="btnLogin">
+                    Login
+                </div>
+            </div>
+            <!--rejister link to sing up-->
+            <div class="signUpForm">
+                
+                Sign up Here
+            </div>
+            
+        </div>
+
+        <div class="content sign_up">
+            
+            <div class="user-details">
+                <div class="title">Doctor Sign Up</div>
+                <div class="input-box log">
+                    <span class="details">Name</span>
+                    <input class="in_login" type="text" id="nameS" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="input-box log">
+                    <span class="details">AMKA</span>
+                    <input class="in_login" type="text" id="amkaS" placeholder="Enter your AMKA" required>
+                </div>
+                <div class="btnSignUp">
+                    Sign Up
+                </div>
+            </div>
+            <!--rejister link to sing up-->
+            <div class="loginForm">
+                
+                Move to Login
+            </div>
+            
+        </div>
+
+
+</body>
+</html> 
+
+<script>
+    // when click on signUpForm class sign_up display flex and login none and the opposite
+    $('.signUpForm').click(function(){
+        $('.login').css('display','none');
+        $('.sign_up').css('display','flex');
+    });
+    $('.loginForm').click(function(){
+        $('.login').css('display','flex');
+        $('.sign_up').css('display','none');
+        //showAll();
+    });
+
+    //login
+			jQuery('.btnLogin').click(function(){
+                var name = jQuery('#nameL').val();
+                var amka = jQuery('#amkaL').val();
+
+                var settings = {
+					"url": "http://localhost:8080/getDoctors",
+					"method": "GET",
+					"timeout": 0,
+					"processData": false,
+					"mimeType": "multipart/form-data",
+					"contentType": false
+				};
+				$.ajax(settings).done(function (response) {
+                 
+                    exist(response,name,amka);
+				});
+            });
+
+            function exist(response,name,amka){
+                let exist = false;
+                //each
+                response = JSON.parse(response);
+                response.forEach(function(value) {
+                     
+                    if(value.doctorname == name && value.damka == amka){
+                        exist = true;
+                        alert("Login successfully");
+                        window.location.href = "doctor.html?doctorname="+name+"&damka="+amka+" ";
+                    }
+                });
+                if(!exist){
+                    alert("Wrong name or amka");
+                }
+                //exist = false;
+            }
+
+        //sign up
+            jQuery('.btnSignUp').click(function(){
+                var name = jQuery('#nameS').val();
+                var amka = jQuery('#amkaS').val();
+                
+                
+                var settings = {
+				  "url": "http://localhost:8080/addDoctor",
+				  "method": "POST",
+				  "timeout": 0,
+				  "headers": {
+					"Content-Type": "application/json"
+				  },
+				  "data": JSON.stringify({
+					"doctorname": name,
+					"damka": amka ,
+					
+				  }),
+				};
+
+				$.ajax(settings).done(function (response) {
+					//alert("Sign up successfully , you can login now");
+                    //console.log(response);
+                    if(!response){
+                        alert("Sign up successfully , you can login now");
+                    }
+                    else{
+                        alert("Empty fields or doctor already exist");
+                    }
+                });
+                
+            });
+
+               
+            
+			//123123 damka
+            //Dr. House doctorname
+</script> 

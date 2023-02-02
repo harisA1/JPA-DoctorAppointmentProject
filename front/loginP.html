@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jquery-->
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Patient Login</title>
+</head>
+<body>
+
+    <div class="container">
+       
+        <div class="content login">
+            
+            <div class="user-details">
+                <div class="title">Patient Login</div>
+                <div class="input-box log">
+                    <span class="details">Name</span>
+                    <input class="in_login" type="text" id="nameL" placeholder="Enter your name" required>
+                </div>
+                <div class="input-box log">
+                    <span class="details">Surname</span>
+                    <input class="in_login" type="text" id="surnameL"  placeholder="Enter your surname" required>
+                </div>
+                <div class="input-box log">
+                    <span class="details">AMKA</span>
+                    <input class="in_login" type="text" id="amkaL" placeholder="Enter your AMKA" required>
+                </div>
+                <div class="btnLogin">
+                    Login
+                </div>
+            </div>
+            <!--rejister link to sing up-->
+            <div class="signUpForm">
+                
+                Sign up Here
+            </div>
+            
+        </div>
+
+        <div class="content sign_up">
+            
+            <div class="user-details">
+                <div class="title">Patient Sign Up</div>
+                <div class="input-box log">
+                    <span class="details">Name</span>
+                    <input class="in_login" type="text" id="nameS" placeholder="Enter your name" required>
+                </div>
+                <div class="input-box log">
+                    <span class="details">Surname</span>
+                    <input class="in_login" type="text" id="surnameS"  placeholder="Enter your surname" required>
+                </div>
+                <div class="input-box log">
+                    <span class="details">AMKA</span>
+                    <input class="in_login" type="text" id="amkaS" placeholder="Enter your AMKA" required>
+                </div>
+                <div class="btnSignUp">
+                    Sign Up
+                </div>
+            </div>
+            <!--rejister link to sing up-->
+            <div class="loginForm">
+                
+                Move to Login
+            </div>
+        </div>
+            
+    </div>
+
+
+</body>
+</html> 
+
+<script>
+    // when click on signUpForm class sign_up display flex and login none and the opposite
+    $('.signUpForm').click(function(){
+        $('.login').css('display','none');
+        $('.sign_up').css('display','flex');
+    });
+    $('.loginForm').click(function(){
+        $('.login').css('display','flex');
+        $('.sign_up').css('display','none');
+    });
+
+    jQuery('.btnLogin').click(function(){
+        var name= jQuery('#nameL').val();
+        var surname= jQuery('#surnameL').val();
+        var amka= jQuery('#amkaL').val();
+
+        //get Patients to check if the patient exist
+        var settings = {
+					"url": "http://localhost:8080/getPatients",
+					"method": "GET",
+					"timeout": 0,
+					"processData": false,
+					"mimeType": "multipart/form-data",
+					"contentType": false
+				};
+				$.ajax(settings).done(function (response) {
+                 
+                    exist(response,name,surname,amka);
+				});
+        
+    });
+
+    function exist(response,name,surname,amka){
+        console.log(name+"BEFORE");
+        var exist=false;
+        console.log(response);
+        response = JSON.parse(response);
+        
+        response.forEach(element => {
+            
+            //console.log(element.name===name && element.surname===surname && element.amka===amka);
+            
+            if(element.name===name && element.surname===surname && element.amka===amka){
+                exist=true;
+                console.log("exist");
+                alert("Welcome "+name+" "+surname);
+                window.location.href = "patient.html?name="+name+"&surname="+surname+"&amka="+amka;
+            }
+             
+
+            
+        });
+        
+        if(!exist){
+            alert("Wrong name or surname or amka please try again or Sign up First"); 
+        }
+    }
+    
+    //sign up
+
+
+    jQuery('.btnSignUp').click(function(){
+        var name= jQuery('#nameS').val();
+        var surname= jQuery('#surnameS').val();
+        var amka= jQuery('#amkaS').val();
+
+        //add patient
+        var settings={
+            "url": "http://localhost:8080/addPatient",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+            "Content-Type": "application/json"
+            },
+            "data": JSON.stringify( {
+                "amka": amka,
+                "name": name,
+                "surname": surname
+                
+            }),
+        };
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            if(!response){
+                        alert("Sign up successfully , you can login now");
+                    }
+                    else{
+                        alert("Empty fields or doctor already exist");
+                    }
+        });
+
+    });
+
+    //test
+    //test
+    //1312
+</script>

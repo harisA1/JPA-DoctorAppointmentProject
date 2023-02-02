@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="style.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <title>Document</title>
+</head>
+<body>
+
+      <table id="courses">
+            <tr>
+                  <th>date</th>
+                  <th>start</th>
+                  <th>end</th>
+            </tr>
+      </table>
+      <button onclick="getAllTimeslot()">get All Timeslot</button>
+     
+
+</body>
+
+      <div class="doctor_auth">
+            input: <input type="text" name="input" id="amka">
+            <button class="submit">Submit</button>
+      </div>
+      <div class="appent_data">
+            <table class="addtimeslot">
+                  <!-- th doctor name, doctor amka, date and time and vaccin center -->
+                  <tr>
+                        <th>doctor name</th>
+                        <th>doctor amka</th>
+                        <th>date</th>
+                        <th>start</th>
+                        
+                        <th>vaccin center
+                              <td>
+                                    <select name="vaccin center" id="vaccin_center_option">
+                                    
+                                    </select>
+                              </td>
+                        </th>
+                  </tr>
+
+                 
+            </table>
+            <button class="submittimeslot">Submit Timeslot</button> 
+      </div>
+
+</html>
+<script>
+            //docoument ready
+            $(document).ready(function(){
+                  
+				var settings = {
+					"url": "http://localhost:8080/getTimeslots",
+					"method": "GET",
+					"timeout": 0,
+					"processData": false,
+					"mimeType": "multipart/form-data",
+					"contentType": false
+				};
+				$.ajax(settings).done(function (response) {
+					authorisation(response);
+				});
+
+                        
+			
+            });
+
+            
+                
+
+
+
+                  function authorisation (json) {
+                        result = jQuery.parseJSON(json);
+                        
+                        console.log(result);
+                        
+
+                        //when click on submit button check amka = with doctorAmka
+                        
+                        $(".submit").click(function(){
+                              let flag=false;
+                              jQuery.each(result, function(i, val) {
+                              
+                              let amka = $("#amka").val();
+                              
+                              //check if amka = doctorAmka
+                              
+                              if (amka == val.doctorAmka && flag==false) {
+                                    alert("amka = doctorAmka");
+                                    //add date and time to table
+                                    flag=true;
+                                    jQuery('.doctor_auth').hide();
+
+                                    appentTimeslot(val.doctorAmka, val.doctor);
+                                    
+                              } else {
+                                   
+                              }
+                              });
+                        });
+
+                        function appentTimeslot(doctorAmka, doctor) {
+
+                              var settings2 = {
+					"url": "http://localhost:8080/getVCenters",
+					"method": "GET",
+					"timeout": 0,
+					"processData": false,
+					"mimeType": "multipart/form-data",
+					"contentType": false
+                              };
+                              $.ajax(settings2).done(function (response2) {
+                                    vaccenters(response2);
+                              }); 
+
+
+                              //appent data to appent_data into table
+
+                             
+                             
+                                          jQuery('.appent_data table').append(
+                                                '<tr>' +
+                                                '<td class="doctor_name">' +doctor+ '</td>' +
+                                                '<td class="doctor_amka">' +doctorAmka+ '</td>' +
+                                                //input date
+                                                '<td>' +'<input type="date" name="date" id="date">'+'</td>' +
+                                                //input start
+                                                '<td>' +'<input type="time" name="start" id="start">'+'</td>' +
+                                                //input vaccin center
+                                                //call the function to get vaccin center
+                                                //'<td>' +'<select name="vaccin center" id="vaccin_center_option">'+
+                                                      //'</select>'+'</td>' +
+                                    
+
+
+                                                //'<td>' +'<input type="text" name="vaccin center" id="vaccin_center">'+'</td>' +
+                                                '</tr>'
+                                          );
+                                               
+                                          
+                                          function vaccenters(json) {
+                                                result = jQuery.parseJSON(json);
+
+                                                jQuery.each(result, function(i, val) {
+                                          
+                                                console.log(val.name);
+                                                //option for vaccin center
+                                                cac_center = val.name;
+                                                appent_option(cac_center);
+                                                     // return '<option value="'+cac_center+'">'+cac_center+'</option>';
+                                                
+                                                //console.log(appent_option(cac_center));
+                                    
+                                                
+                                                });
+
+                                          }      
+
+                                          function appent_option(cac_center){
+                                                 jQuery('#vaccin_center_option').append(
+                                                      
+                                                '<option value="'+cac_center+'">'+cac_center+'</option>'
+                                                      
+                                                 );
+                                                // return '<option value="'+cac_center+'">'+cac_center+'</option>';
+                                                
+                                             
+                                          }
+                                         
+                              
+                        }
+
+                        //when click on submit timeslot button get data from table
+                        $(".submittimeslot").click(function(){
+                              let doctor_name = $(".doctor_name").text();
+                              let doctor_amka = $(".doctor_amka").text();
+                              let date = $("#date").val();
+                              //make date with : instead of -
+                              //make date day mount year
+                              date= date.split("-").reverse().join(":");
+                              
+                              let start = $("#start").val();
+                              let vaccin_center = $("#vaccin_center").val();
+                              let vaccin_center_option = $("#vaccin_center_option").val();
+
+                              
+
+                              addTimeslot(doctor_amka, doctor_name, date, start, vaccin_center_option)
+                             
+
+                        });
+                        
+                        function addTimeslot(doctor_amka, doctor_name, date, start, vaccin_center) {
+                              console.log(doctor_name);
+                              console.log(doctor_amka);
+                              console.log(date);
+                              console.log(start);
+                              console.log(vaccin_center);
+                              var settings = {
+					"url": "http://localhost:8080/addTimeslot?"
+                                    +"date=" +date+
+                                    "&start=" +start+
+                                    "&doctor=" +doctor_name+
+                                    "&vcname=" +vaccin_center+
+                                    "&amka=" +doctor_amka,
+					"method": "GET",
+					"timeout": 0,
+					"processData": false,
+					"mimeType": "multipart/form-data",
+					"contentType": false
+                              };
+                              console.log(settings.url);
+                              $.ajax(settings).done(function (response) {
+                                    alert('Timeslot added');
+                              });
+                        }	
+                       
+
+                        
+                       
+                             
+                        
+                        
+
+                  }
+                  
+                
+      
+
+</script>
